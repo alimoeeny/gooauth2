@@ -40,6 +40,7 @@ package oauth
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"mime"
 	"net/http"
 	"net/url"
@@ -325,6 +326,8 @@ func (t *Transport) updateToken(tok *Token, v url.Values) error {
 	}
 	defer r.Body.Close()
 	if r.StatusCode != 200 {
+		body, _ := ioutil.ReadAll(r.Body)
+		log.Printf("OAUTH2 ERROR, resp body: %#v\n", string(body))
 		return OAuthError{"updateToken", r.Status}
 	}
 	var b struct {
